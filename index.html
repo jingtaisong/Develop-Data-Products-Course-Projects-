@@ -1,1 +1,172 @@
-default text
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Introduction To The National Park Trip Planner</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Introduction To The National Park Trip Planner">
+  <meta name="author" content="Taisong Jing">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Introduction To The National Park Trip Planner</h1>
+    <h2></h2>
+    <p>Taisong Jing<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Motivation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>It is always exciting to have vacations at the tremendously gorgeous national parks in the U.S., especially when we are talking about the 25 national parks in the Southwest and California:</p>
+
+<p><a href="http://parks.mapquest.com/national-parks/map-of-all-national-parks">http://parks.mapquest.com/national-parks/map-of-all-national-parks</a></p>
+
+<p>Got scared when you tried to plan your trip among the clustered national parks? Our <strong>National Park Trip Planner</strong> will solve the problem for you in a minute, possibly with surprising bonus visits on the way!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>A user guide to the trip planner</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>What you can do:</h3>
+
+<ul>
+<li><p>select the national parks as your origin and destination from a list menu</p></li>
+<li><p>set with a slider the extra percentage (from 0% to 25%) of distance you are willing to take in order to visit other parks on the way </p></li>
+</ul>
+
+<h3>What you can get:</h3>
+
+<ul>
+<li><p>The shortest distance betwen the origin and the destination</p></li>
+<li><p>Other alternative trip plans which may take longer distance but with the oppurtunities to visit more national parks during the journey</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>R package: {igraph}</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The optimization problem behind this trip planner is to find the k shortest paths between two vertices on an undirected weighted graph. We use the R package <strong>igraph</strong> to implement the algorithms on graphs. </p>
+
+<p>The following code will produce a graph <em>g</em> with 7 vertices and 8 edges and given weights</p>
+
+<pre><code class="r">library(igraph)
+g&lt;-graph.empty(directed=FALSE)
+g&lt;-g+vertices(letters[1:7]) + edges(&quot;a&quot;,&quot;b&quot;,&quot;a&quot;,&quot;d&quot;,&quot;b&quot;,&quot;c&quot;,&quot;b&quot;,&quot;e&quot;,&quot;c&quot;,&quot;d&quot;,&quot;c&quot;,&quot;g&quot;,&quot;d&quot;,&quot;f&quot;)
+E(g)$weight&lt;-c(1,2,3,4,6,7,8)
+</code></pre>
+
+<p>When k=1, it amounts to find the shortest path and its length between any two given vertices. There is a function <em>get.shortest.paths</em> in <strong>igraph</strong> to implemen a variety of algorithms (e.g., Dijkstra algorithm) to find this path. The following example code finds the shortest paths and its length between the vertices &quot;a&quot; and &quot;g&quot; on the graph</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Algorithm</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">vertexsequence&lt;-get.shortest.paths(g,&quot;a&quot;,&quot;g&quot;)$vpath[[1]] #the vertex sequence is in the format of numbers
+V(g)$name[vertexsequence] #this converts the numbers into the names of the vertices
+</code></pre>
+
+<pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;g&quot;
+</code></pre>
+
+<pre><code class="r">as.numeric(shortest.paths(g,&quot;a&quot;,&quot;g&quot;)) #the length of this shortest path
+</code></pre>
+
+<pre><code>## [1] 11
+</code></pre>
+
+<p>When k&gt;1, we implement Yen&#39;s algorithm (Yen, Jin Y. (1970)) to find the k shortest paths on the graph. The idea is dynamic programming: remove parts of the previously found shortest paths to find candidates of the next shortest path. </p>
+
+<h2>That&#39;s the mechanism behind how you get the amazing trip recommendations!</h2>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Motivation'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='A user guide to the trip planner'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='R package: {igraph}'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Algorithm'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

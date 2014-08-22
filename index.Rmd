@@ -1,0 +1,70 @@
+---
+title       : Introduction To The National Park Trip Planner
+subtitle    : 
+author      : Taisong Jing
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+--- 
+
+## Motivation
+
+It is always exciting to have vacations at the tremendously gorgeous national parks in the U.S., especially when we are talking about the 25 national parks in the Southwest and California:
+
+[http://parks.mapquest.com/national-parks/map-of-all-national-parks](http://parks.mapquest.com/national-parks/map-of-all-national-parks)
+
+Got scared when you tried to plan your trip among the clustered national parks? Our **National Park Trip Planner** will solve the problem for you in a minute, possibly with surprising bonus visits on the way!
+
+--- 
+
+## A user guide to the trip planner
+
+### What you can do:
+
+- select the national parks as your origin and destination from a list menu
+
+- set with a slider the extra percentage (from 0% to 25%) of distance you are willing to take in order to visit other parks on the way 
+
+### What you can get:
+
+- The shortest distance betwen the origin and the destination
+
+- Other alternative trip plans which may take longer distance but with the oppurtunities to visit more national parks during the journey
+
+---
+
+## R package: {igraph}
+
+The optimization problem behind this trip planner is to find the k shortest paths between two vertices on an undirected weighted graph. We use the R package **igraph** to implement the algorithms on graphs. 
+
+The following code will produce a graph *g* with 7 vertices and 8 edges and given weights
+
+```{r}{Create graph}
+library(igraph)
+g<-graph.empty(directed=FALSE)
+g<-g+vertices(letters[1:7]) + edges("a","b","a","d","b","c","b","e","c","d","c","g","d","f")
+E(g)$weight<-c(1,2,3,4,6,7,8)
+```
+
+When k=1, it amounts to find the shortest path and its length between any two given vertices. There is a function *get.shortest.paths* in **igraph** to implemen a variety of algorithms (e.g., Dijkstra algorithm) to find this path. The following example code finds the shortest paths and its length between the vertices "a" and "g" on the graph
+
+---
+## Algorithm
+
+```{r}{Shortest path}
+vertexsequence<-get.shortest.paths(g,"a","g")$vpath[[1]] #the vertex sequence is in the format of numbers
+V(g)$name[vertexsequence] #this converts the numbers into the names of the vertices
+as.numeric(shortest.paths(g,"a","g")) #the length of this shortest path
+```
+
+When k>1, we implement Yen's algorithm (Yen, Jin Y. (1970)) to find the k shortest paths on the graph. The idea is dynamic programming: remove parts of the previously found shortest paths to find candidates of the next shortest path. 
+
+## That's the mechanism behind how you get the amazing trip recommendations!
+
+
+
+
