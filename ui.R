@@ -38,6 +38,8 @@ shinyUI(pageWithSidebar(
         submitButton("Submit")
     ),
     mainPanel(
+        h3("Basic User Guide:"),
+        p(HTML("Jumping into vacations for national parks in the southwest but got scared when planning the trip? This trip planner will help you choose your tailored route in a minute! <br/> Choose your origin and destination from the menu on the left side and tell us by how long in percentage are you willing to add on the journey so that you could visit other national parks on your way, </br> then you will find our recommended routes on the right side!")),
         h3("Recommended Routes:"),
         htmlOutput("Routes")
     )
